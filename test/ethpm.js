@@ -77,22 +77,22 @@ describe('EthPM integration', function() {
     });
   });
 
-  // afterEach("stop ipfs server", function(done) {
-  //   this.timeout(10000);
-  //
-  //   var called = false;
-  //   // The callback gets called more than once...
-  //   try {
-  //     ipfs_daemon.stopDaemon(function() {
-  //       if (called == false) {
-  //         called = true;
-  //         done();
-  //       }
-  //     });
-  //   } catch (e) {
-  //     // do nothing
-  //   }
-  // });
+  afterEach("stop ipfs server", function(done) {
+    this.timeout(10000);
+  
+    var called = false;
+    // The callback gets called more than once...
+    try {
+      ipfs_daemon.stopDaemon(function() {
+        if (called == false) {
+          called = true;
+          done();
+        }
+      });
+    } catch (e) {
+      // do nothing
+    }
+  });
 
   it("successfully installs single dependency from EthPM", function(done) {
     this.timeout(20000); // Giving ample time for requests to time out.
