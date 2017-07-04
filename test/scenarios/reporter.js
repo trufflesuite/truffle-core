@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 // This is a direct copy of the following reporter changed
 // such that logger commands are switched to a configurable logger.
@@ -9,12 +9,12 @@
  * Module dependencies.
  */
 
-var ms = require('mocha/lib/ms.js');
-var Base = require('mocha/lib/reporters/base.js');
+var ms = require('mocha/lib/ms.js')
+var Base = require('mocha/lib/reporters/base.js')
 var utils = require('mocha/lib/utils')
-var inherits = utils.inherits;
-var color = Base.color;
-var diff = require('diff');
+var inherits = utils.inherits
+var color = Base.color
+var diff = require('diff')
 
 
 /**
@@ -25,7 +25,7 @@ exports = module.exports = function(logger) {
   /**
    * Inherit from `Base.prototype`.
    */
-  inherits(Spec, Base);
+  inherits(Spec, Base)
 
   /**
    * Initialize a new `Spec` test reporter.
@@ -34,106 +34,106 @@ exports = module.exports = function(logger) {
    * @param {Runner} runner
    */
   function Spec (runner) {
-    Base.call(this, runner);
+    Base.call(this, runner)
 
-    var self = this;
-    var indents = 0;
-    var n = 0;
+    var self = this
+    var indents = 0
+    var n = 0
 
     function indent () {
-      return Array(indents).join('  ');
+      return Array(indents).join('  ')
     }
 
     runner.on('start', function () {
-      logger.log();
-    });
+      logger.log()
+    })
 
     runner.on('suite', function (suite) {
-      ++indents;
-      logger.log(color('suite', '%s%s'), indent(), suite.title);
-    });
+      ++indents
+      logger.log(color('suite', '%s%s'), indent(), suite.title)
+    })
 
     runner.on('suite end', function () {
-      --indents;
+      --indents
       if (indents === 1) {
-        logger.log();
+        logger.log()
       }
-    });
+    })
 
     runner.on('pending', function (test) {
-      var fmt = indent() + color('pending', '  - %s');
-      logger.log(fmt, test.title);
-    });
+      var fmt = indent() + color('pending', '  - %s')
+      logger.log(fmt, test.title)
+    })
 
     runner.on('pass', function (test) {
-      var fmt;
+      var fmt
       if (test.speed === 'fast') {
         fmt = indent() +
           color('checkmark', '  ' + Base.symbols.ok) +
-          color('pass', ' %s');
-        logger.log(fmt, test.title);
+          color('pass', ' %s')
+        logger.log(fmt, test.title)
       } else {
         fmt = indent() +
           color('checkmark', '  ' + Base.symbols.ok) +
           color('pass', ' %s') +
-          color(test.speed, ' (%dms)');
-        logger.log(fmt, test.title, test.duration);
+          color(test.speed, ' (%dms)')
+        logger.log(fmt, test.title, test.duration)
       }
-    });
+    })
 
     runner.on('fail', function (test) {
-      logger.log(indent() + color('fail', '  %d) %s'), ++n, test.title);
-    });
+      logger.log(indent() + color('fail', '  %d) %s'), ++n, test.title)
+    })
 
     runner.on('end', function() {
-      self.epilogue();
-    });
-  };
+      self.epilogue()
+    })
+  }
 
   // This is a direct copy of Base.epilogue, replacing logger with logger.
   Spec.prototype.epilogue = function() {
-    var stats = this.stats;
-    var fmt;
+    var stats = this.stats
+    var fmt
 
-    logger.log();
+    logger.log()
 
     // passes
     fmt = color('bright pass', ' ') +
       color('green', ' %d passing') +
-      color('light', ' (%s)');
+      color('light', ' (%s)')
 
     logger.log(fmt,
       stats.passes || 0,
-      ms(stats.duration));
+      ms(stats.duration))
 
     // pending
     if (stats.pending) {
       fmt = color('pending', ' ') +
-        color('pending', ' %d pending');
+        color('pending', ' %d pending')
 
-      logger.log(fmt, stats.pending);
+      logger.log(fmt, stats.pending)
     }
 
     // failures
     if (stats.failures) {
-      fmt = color('fail', '  %d failing');
+      fmt = color('fail', '  %d failing')
 
-      logger.log(fmt, stats.failures);
+      logger.log(fmt, stats.failures)
 
-      this.list(this.failures);
-      logger.log();
+      this.list(this.failures)
+      logger.log()
     }
 
-    logger.log();
-  };
+    logger.log()
+  }
 
   // The following three functions pulled from Mocha's Base reporter
   // so that we can change console with a configurable logger.
   // https://github.com/mochajs/mocha/blob/master/lib/reporters/base.js
-  var objToString = Object.prototype.toString;
+  var objToString = Object.prototype.toString
 
   function sameType (a, b) {
-    return objToString.call(a) === objToString.call(b);
+    return objToString.call(a) === objToString.call(b)
   }
 
   /**
@@ -146,17 +146,17 @@ exports = module.exports = function(logger) {
    * @return {string}
    */
   function errorDiff (err, type, escape) {
-    var actual = escape ? escapeInvisibles(err.actual) : err.actual;
-    var expected = escape ? escapeInvisibles(err.expected) : err.expected;
+    var actual = escape ? escapeInvisibles(err.actual) : err.actual
+    var expected = escape ? escapeInvisibles(err.expected) : err.expected
     return diff['diff' + type](actual, expected).map(function (str) {
       if (str.added) {
-        return colorLines('diff added', str.value);
+        return colorLines('diff added', str.value)
       }
       if (str.removed) {
-        return colorLines('diff removed', str.value);
+        return colorLines('diff removed', str.value)
       }
-      return str.value;
-    }).join('');
+      return str.value
+    }).join('')
   }
 
   /**
@@ -168,15 +168,15 @@ exports = module.exports = function(logger) {
    * @return {string} Diff
    */
   function inlineDiff (err, escape) {
-    var msg = errorDiff(err, 'WordsWithSpace', escape);
+    var msg = errorDiff(err, 'WordsWithSpace', escape)
 
     // linenos
-    var lines = msg.split('\n');
+    var lines = msg.split('\n')
     if (lines.length > 4) {
-      var width = String(lines.length).length;
+      var width = String(lines.length).length
       msg = lines.map(function (str, i) {
-        return pad(++i, width) + ' |' + ' ' + str;
-      }).join('\n');
+        return pad(++i, width) + ' |' + ' ' + str
+      }).join('\n')
     }
 
     // legend
@@ -186,11 +186,11 @@ exports = module.exports = function(logger) {
       color('diff added', 'expected') +
       '\n\n' +
       msg +
-      '\n';
+      '\n'
 
     // indent
-    msg = msg.replace(/^/gm, '      ');
-    return msg;
+    msg = msg.replace(/^/gm, '      ')
+    return msg
   }
 
 
@@ -204,8 +204,8 @@ exports = module.exports = function(logger) {
    */
   function colorLines (name, str) {
     return str.split('\n').map(function (str) {
-      return color(name, str);
-    }).join('\n');
+      return color(name, str)
+    }).join('\n')
   }
 
   /**
@@ -217,101 +217,101 @@ exports = module.exports = function(logger) {
    * @return {string} The diff.
    */
   function unifiedDiff (err, escape) {
-    var indent = '      ';
+    var indent = '      '
     function cleanUp (line) {
       if (escape) {
-        line = escapeInvisibles(line);
+        line = escapeInvisibles(line)
       }
       if (line[0] === '+') {
-        return indent + colorLines('diff added', line);
+        return indent + colorLines('diff added', line)
       }
       if (line[0] === '-') {
-        return indent + colorLines('diff removed', line);
+        return indent + colorLines('diff removed', line)
       }
       if (line.match(/@@/)) {
-        return null;
+        return null
       }
       if (line.match(/\\ No newline/)) {
-        return null;
+        return null
       }
-      return indent + line;
+      return indent + line
     }
     function notBlank (line) {
-      return typeof line !== 'undefined' && line !== null;
+      return typeof line !== 'undefined' && line !== null
     }
-    var msg = diff.createPatch('string', err.actual, err.expected);
-    var lines = msg.split('\n').splice(4);
+    var msg = diff.createPatch('string', err.actual, err.expected)
+    var lines = msg.split('\n').splice(4)
     return '\n      ' +
       colorLines('diff added', '+ expected') + ' ' +
       colorLines('diff removed', '- actual') +
       '\n\n' +
-      lines.map(cleanUp).filter(notBlank).join('\n');
+      lines.map(cleanUp).filter(notBlank).join('\n')
   }
 
 
   Spec.prototype.list = function(failures) {
-    logger.log();
+    logger.log()
     failures.forEach(function (test, i) {
       // format
       var fmt = color('error title', '  %s) %s:\n') +
         color('error message', '     %s') +
-        color('error stack', '\n%s\n');
+        color('error stack', '\n%s\n')
 
       // msg
-      var msg;
-      var err = test.err;
-      var message;
+      var msg
+      var err = test.err
+      var message
       if (err.message && typeof err.message.toString === 'function') {
-        message = err.message + '';
+        message = err.message + ''
       } else if (typeof err.inspect === 'function') {
-        message = err.inspect() + '';
+        message = err.inspect() + ''
       } else {
-        message = '';
+        message = ''
       }
-      var stack = err.stack || message;
-      var index = message ? stack.indexOf(message) : -1;
-      var actual = err.actual;
-      var expected = err.expected;
-      var escape = true;
+      var stack = err.stack || message
+      var index = message ? stack.indexOf(message) : -1
+      var actual = err.actual
+      var expected = err.expected
+      var escape = true
 
       if (index === -1) {
-        msg = message;
+        msg = message
       } else {
-        index += message.length;
-        msg = stack.slice(0, index);
+        index += message.length
+        msg = stack.slice(0, index)
         // remove msg from stack
-        stack = stack.slice(index + 1);
+        stack = stack.slice(index + 1)
       }
 
       // uncaught
       if (err.uncaught) {
-        msg = 'Uncaught ' + msg;
+        msg = 'Uncaught ' + msg
       }
       // explicitly show diff
       if (err.showDiff !== false && sameType(actual, expected) && expected !== undefined) {
-        escape = false;
+        escape = false
         if (!(utils.isString(actual) && utils.isString(expected))) {
-          err.actual = actual = utils.stringify(actual);
-          err.expected = expected = utils.stringify(expected);
+          err.actual = actual = utils.stringify(actual)
+          err.expected = expected = utils.stringify(expected)
         }
 
-        fmt = color('error title', '  %s) %s:\n%s') + color('error stack', '\n%s\n');
-        var match = message.match(/^([^:]+): expected/);
-        msg = '\n      ' + color('error message', match ? match[1] : msg);
+        fmt = color('error title', '  %s) %s:\n%s') + color('error stack', '\n%s\n')
+        var match = message.match(/^([^:]+): expected/)
+        msg = '\n      ' + color('error message', match ? match[1] : msg)
 
         if (exports.inlineDiffs) {
-          msg += inlineDiff(err, escape);
+          msg += inlineDiff(err, escape)
         } else {
-          msg += unifiedDiff(err, escape);
+          msg += unifiedDiff(err, escape)
         }
       }
 
       // indent stack trace
-      stack = stack.replace(/^/gm, '  ');
+      stack = stack.replace(/^/gm, '  ')
 
-      logger.log(fmt, (i + 1), test.fullTitle(), msg, stack);
-    });
-  };
+      logger.log(fmt, (i + 1), test.fullTitle(), msg, stack)
+    })
+  }
 
-  return Spec;
-};
+  return Spec
+}

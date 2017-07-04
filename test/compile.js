@@ -1,86 +1,86 @@
-var assert = require("chai").assert;
-var Init = require("truffle-init");
-var Contracts = require("../lib/contracts");
-var Artifactor = require("truffle-artifactor");
-var Resolver = require("truffle-resolver");
-var path = require("path");
-var fs = require("fs");
+var assert = require('chai').assert
+var Init = require('truffle-init')
+var Contracts = require('../lib/contracts')
+var Artifactor = require('truffle-artifactor')
+var Resolver = require('truffle-resolver')
+var path = require('path')
+var fs = require('fs')
 
-describe("compile", function() {
-  var config;
+describe('compile', function() {
+  var config
 
-  before("Create a sandbox", function(done) {
-    this.timeout(10000);
+  before('Create a sandbox', function(done) {
+    this.timeout(10000)
     Init.sandbox(function(err, result) {
-      if (err) return done(err);
-      config = result;
-      config.resolver = new Resolver(config);
-      config.artifactor = new Artifactor(config.contracts_build_directory);
+      if (err) return done(err)
+      config = result
+      config.resolver = new Resolver(config)
+      config.artifactor = new Artifactor(config.contracts_build_directory)
       config.networks = {
-        "default": {
-          "network_id": "1"
+        'default': {
+          'network_id': '1'
         },
-        "secondary": {
-          "network_id": "12345"
+        'secondary': {
+          'network_id': '12345'
         }
-      };
-      config.network = "default";
-      done();
-    });
-  });
+      }
+      config.network = 'default'
+      done()
+    })
+  })
 
   it('compiles all initial contracts', function(done) {
-    this.timeout(10000);
+    this.timeout(10000)
 
     Contracts.compile(config.with({
       all: false,
       quiet: true
     }), function(err, contracts) {
-      if (err) return done(err);
+      if (err) return done(err)
 
-      assert.equal(Object.keys(contracts).length, 3, "Didn't compile the expected number of contracts");
-      done();
-    });
-  });
+      assert.equal(Object.keys(contracts).length, 3, 'Didn\'t compile the expected number of contracts')
+      done()
+    })
+  })
 
   it('compiles no contracts after no updates', function(done) {
-    this.timeout(10000);
+    this.timeout(10000)
 
     Contracts.compile(config.with({
       all: false,
       quiet: true
     }), function(err, contracts) {
-      if (err) return done(err);
+      if (err) return done(err)
 
-      assert.equal(Object.keys(contracts).length, 0, "Compiled a contract even though we weren't expecting it");
-      done();
-    });
-  });
+      assert.equal(Object.keys(contracts).length, 0, 'Compiled a contract even though we weren\'t expecting it')
+      done()
+    })
+  })
 
   it('compiles contract and dependencies after an update', function(done) {
-    this.timeout(10000);
+    this.timeout(10000)
 
-    var file_to_update = path.resolve(path.join(config.contracts_directory, "MetaCoin.sol"));
+    var file_to_update = path.resolve(path.join(config.contracts_directory, 'MetaCoin.sol'))
 
     // Update the modification time to simulate an edit.
-    var newTime = new Date().getTime();
-    fs.utimesSync(file_to_update, newTime, newTime);
+    var newTime = new Date().getTime()
+    fs.utimesSync(file_to_update, newTime, newTime)
 
     Contracts.compile(config.with({
       all: false,
       quiet: true
     }), function(err, contracts) {
-      if (err) return done(err);
+      if (err) return done(err)
 
-      assert.equal(Object.keys(contracts).length, 2, "Expected MetaCoin and ConvertLib to be compiled");
-      done();
-    });
-  });
+      assert.equal(Object.keys(contracts).length, 2, 'Expected MetaCoin and ConvertLib to be compiled')
+      done()
+    })
+  })
 
-  it("compiling shouldn't create any network artifacts", function() {
-    var contract = config.resolver.require("MetaCoin.sol");
-    assert.equal(Object.keys(contract.networks).length, 0, "Expected the contract to be managing zero networks");
-  });
+  it('compiling shouldn\'t create any network artifacts', function() {
+    var contract = config.resolver.require('MetaCoin.sol')
+    assert.equal(Object.keys(contract.networks).length, 0, 'Expected the contract to be managing zero networks')
+  })
 
   // TODO: Kept this as a comment because I'm confused if it applies.
   // Since the binary and abi are updated with every compile, and they're not within
@@ -106,4 +106,4 @@ describe("compile", function() {
   //   var contract = config.resolver.require("MetaCoin.sol");
   //   assert.equal(contract.networks().length, 2, "Expected the contract to be managing two networks");
   // });
-});
+})
