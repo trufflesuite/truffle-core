@@ -65,8 +65,10 @@
     }
   ],
   "devDependencies": {
+    "eslint": "^4.1.1",
     "ethereumjs-testrpc": "^3.0.3",
     "ipfsd-ctl": "^0.18.2",
+    "mocha-eslint": "^3.0.1",
     "stream-buffers": "^3.0.1",
     "truffle-blockchain-utils": "0.0.1"
   }
