@@ -58,7 +58,7 @@ describe('create', function() {
       dir.files(config.migrations_directory, function(err, files) {
         var found = false;
         files.forEach(function(file) {
-          if (file.indexOf("my_new_migration") > 0) {
+          if (file.match(/my_new_migration\.js$/)) {
             var file_data = fs.readFileSync(file, {encoding: "utf8"});
             assert.isNotNull(file_data, "File's data is null");
             assert.notEqual(file_data, "", "File's data is blank");
