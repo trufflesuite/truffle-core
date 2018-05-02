@@ -36,7 +36,6 @@ describe("compile", function() {
     });
   });
 
-<<<<<<< HEAD
   after("Cleanup tmp files", function(done){
     glob('tmp-*', (err, files) => {
       if(err) done(err);
@@ -44,9 +43,8 @@ describe("compile", function() {
       done();
     })
   })
-=======
+
   afterEach("Clear MemoryStream", () => output = '');
->>>>>>> next
 
   it('compiles all initial contracts', function(done) {
     this.timeout(10000);
