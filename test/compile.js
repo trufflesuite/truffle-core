@@ -6,7 +6,8 @@ var Resolver = require("truffle-resolver");
 var MemoryStream = require('memorystream');
 var command = require('../lib/commands/compile');
 var path = require("path");
-var fs = require("fs");
+var fs = require("fs-extra");
+var glob = require("glob");
 
 describe("compile", function() {
   var config;
@@ -34,6 +35,14 @@ describe("compile", function() {
       done();
     });
   });
+
+  after("Cleanup tmp files", function(done){
+    glob('tmp-*', (err, files) => {
+      if(err) done(err);
+      files.forEach(file => fs.removeSync(file));
+      done();
+    })
+  })
 
   afterEach("Clear MemoryStream", () => output = '');
 
