@@ -28,7 +28,7 @@ describe('NPM integration', function() {
       };
       config.network = "development";
 
-      fs.writeFile(path.join(config.contracts_directory, "Parent.sol"), parentContractSource, {encoding: "utf8"}, done());
+      fs.writeFile(path.join(config.contracts_directory, "Parent.sol"), parentContractSource, {encoding: "utf8"}, done);
     });
   });
 
@@ -62,7 +62,7 @@ describe('NPM integration', function() {
     });
   });
 
-  it("contract compiliation successfully picks up modules and their dependencies", function(done) {
+  it("contract compilation successfully picks up modules and their dependencies", function(done) {
     this.timeout(10000);
 
     Contracts.compile(config.with({
