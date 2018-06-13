@@ -7,6 +7,10 @@
 
 -----------------------
 
+### :warning: This repo is deprecated :warning:
+**Truffle has moved all modules to a monorepo at [trufflesuite/truffle](https://github.com/trufflesuite/truffle). See you over there!**
+
+-----------------------
 
 Truffle is a development environment, testing framework and asset pipeline for Ethereum, aiming to make life as an Ethereum developer easier. With Truffle, you get:
 
