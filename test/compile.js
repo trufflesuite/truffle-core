@@ -64,7 +64,7 @@ describe("compile", function() {
     var stat = fs.statSync(file_to_update);
 
     // Update the modification time to simulate an edit.
-    var newTime = new Date().getTime();
+    var newTime = new Date();
     fs.utimesSync(file_to_update, newTime, newTime);
 
     Contracts.compile(config.with({
